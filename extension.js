@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * extension wireless-hid
@@ -8,7 +8,7 @@
  * @copyright Copyright 2021, Václav Chlumský.
  */
 
- /**
+/**
  * @license
  * The MIT License (MIT)
  *
@@ -47,7 +47,6 @@ var hid; /* main widget */
  * @method init
  */
 function init() {
-
     ExtensionUtils.initTranslations();
 
     log(`initializing ${Me.metadata.name} version ${Me.metadata.version}`);
@@ -59,10 +58,9 @@ function init() {
  * @method enable
  */
 function enable() {
-
     hid = new WirelessHID.WirelessHID();
 
-    Main.panel.addToStatusArea('wireless-hid', hid);
+    Main.panel.addToStatusArea("wireless-hid-reloaded", hid);
 
     log(`enabling ${Me.metadata.name} version ${Me.metadata.version}`);
 }
@@ -74,7 +72,6 @@ function enable() {
  * @method disable
  */
 function disable() {
-
     hid.destroy();
 
     log(`disabling ${Me.metadata.name} version ${Me.metadata.version}`);
