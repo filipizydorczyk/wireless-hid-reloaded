@@ -23,5 +23,5 @@ At this point you need to reload gnome shell in order to be able to enable this 
 
 # To do
 
--   [] make extension displaing % in tray
--   [] add possibility to enable and disable displaing devices in tray
+-   [ ] make extension displaing % in tray
+-   [ ] add possibility to enable and disable displaing devices in tray
