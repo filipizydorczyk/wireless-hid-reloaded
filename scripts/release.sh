@@ -1,3 +1,4 @@
 #!/bin/bash
 
-zip -r wireless-hid-reloaded.zip . --exclude=po/\* --exclude=.git/\* --exclude=screenshot.png --exclude=*.sh --exclude=*.zip
+rm -f ./wireless-hid-reloaded.zip
+zip -j wireless-hid-reloaded.zip ./src/* ./*.md ./metadata.json ./LICENSE
