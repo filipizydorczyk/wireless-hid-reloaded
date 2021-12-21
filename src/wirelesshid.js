@@ -105,47 +105,11 @@ var HID = GObject.registerClass(
             return this.device.percentage;
         }
 
-        getColorEffect(percentage) {
-            let r;
-            let g;
-            let b;
-
-            if (percentage <= 10) {
-                r = 255;
-                g = 0;
-                b = 0;
-            } else if (percentage <= 30) {
-                r = 255;
-                g = 165;
-                b = 0;
-            } else {
-                return null;
-            }
-
-            let color = new Clutter.Color({
-                red: r,
-                green: g,
-                blue: b,
-                alpha: 255,
-            });
-
-            return new Clutter.ColorizeEffect({ tint: color });
-        }
-
         _update() {
             this.percentage = this.getBattery();
 
             if (this.label !== null) {
                 this.label.text = `${this.percentage}%`;
-            }
-
-            if (this.icon !== null) {
-                this.icon.clear_effects();
-
-                let colorEffect = this.getColorEffect(this.percentage);
-                if (colorEffect) {
-                    this.icon.add_effect(colorEffect);
-                }
             }
 
             this.emit("update");
@@ -162,10 +126,14 @@ var HID = GObject.registerClass(
                 iconName = "input-gaming";
             }
 
-            this.icon = new St.Icon({
-                icon_name: iconName,
-                style_class: "system-status-icon",
-            });
+            this.icon = new St.BoxLayout();
+            this.icon.add_child(
+                new St.Icon({
+                    icon_name: iconName,
+                    style_class: "system-status-icon",
+                })
+            );
+            this.icon.add_child(this.createLabel());
 
             this._update();
 
