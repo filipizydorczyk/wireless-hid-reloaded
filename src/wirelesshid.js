@@ -52,7 +52,49 @@ const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(
     DisplayDeviceInterface
 );
 
-var HID = GObject.registerClass(
+const DeviceIconHID = GObject.registerClass(
+    {
+        GTypeName: "DeviceIconHID",
+    },
+    class DeviceIconHID extends St.BoxLayout {
+        _init(iconName) {
+            super._init();
+
+            this.label = null;
+            this.percentage = null;
+
+            this.add_child(
+                new St.Icon({
+                    icon_name: iconName,
+                    style_class: "system-status-icon",
+                })
+            );
+            this.add_child(this._createLabel());
+        }
+
+        _createLabel() {
+            this.label = new St.Label({
+                text: _("%"),
+                y_align: Clutter.ActorAlign.CENTER,
+                x_align: Clutter.ActorAlign.END,
+            });
+
+            this.label.set_x_expand(false);
+
+            return this.label;
+        }
+
+        updatePercentage(percentage) {
+            this.percentage = percentage;
+
+            if (this.label != null) {
+                this.label.text = `${this.percentage || `--`}%`;
+            }
+        }
+    }
+);
+
+const HID = GObject.registerClass(
     {
         Signals: {
             update: {},
@@ -112,6 +154,10 @@ var HID = GObject.registerClass(
                 this.label.text = `${this.percentage}%`;
             }
 
+            if (this.icon !== null) {
+                this.icon.updatePercentage(this.percentage);
+            }
+
             this.emit("update");
         }
 
@@ -126,14 +172,7 @@ var HID = GObject.registerClass(
                 iconName = "input-gaming";
             }
 
-            this.icon = new St.BoxLayout();
-            this.icon.add_child(
-                new St.Icon({
-                    icon_name: iconName,
-                    style_class: "system-status-icon",
-                })
-            );
-            this.icon.add_child(this.createLabel());
+            this.icon = new DeviceIconHID(iconName);
 
             this._update();
 
@@ -167,7 +206,7 @@ var HID = GObject.registerClass(
  * @constructor
  * @return {Object} menu widget instance
  */
-var WirelessHID = GObject.registerClass(
+const WirelessHID = GObject.registerClass(
     {
         GTypeName: "WirelessHIDReloaded",
     },
