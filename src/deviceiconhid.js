@@ -43,7 +43,7 @@ const DeviceIconHID = GObject.registerClass(
     },
     class DeviceIconHID extends St.BoxLayout {
         _init(iconName) {
-            super._init();
+            super._init({ style_class: "wirelesshid-icon-container" });
 
             this.label = null;
             this.percentage = null;
