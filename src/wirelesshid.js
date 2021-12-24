@@ -35,7 +35,6 @@
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const St = imports.gi.St;
@@ -43,161 +42,8 @@ const Gio = imports.gi.Gio;
 const GObject = imports.gi.GObject;
 const UPower = imports.gi.UPowerGlib;
 const Clutter = imports.gi.Clutter;
-
-const { loadInterfaceXML } = imports.misc.fileUtils;
-const DisplayDeviceInterface = loadInterfaceXML(
-    "org.freedesktop.UPower.Device"
-);
-const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(
-    DisplayDeviceInterface
-);
-
-const DeviceIconHID = GObject.registerClass(
-    {
-        GTypeName: "DeviceIconHID",
-    },
-    class DeviceIconHID extends St.BoxLayout {
-        _init(iconName) {
-            super._init();
-
-            this.label = null;
-            this.percentage = null;
-
-            this.add_child(
-                new St.Icon({
-                    icon_name: iconName,
-                    style_class: "system-status-icon",
-                })
-            );
-            this.add_child(this._createLabel());
-        }
-
-        _createLabel() {
-            this.label = new St.Label({
-                text: _("%"),
-                y_align: Clutter.ActorAlign.CENTER,
-                x_align: Clutter.ActorAlign.END,
-            });
-
-            this.label.set_x_expand(false);
-
-            return this.label;
-        }
-
-        updatePercentage(percentage) {
-            this.percentage = percentage;
-
-            if (this.label != null) {
-                this.label.text = `${this.percentage || `--`}%`;
-            }
-        }
-    }
-);
-
-const HID = GObject.registerClass(
-    {
-        Signals: {
-            update: {},
-            destroy: {},
-        },
-    },
-    class HID extends GObject.Object {
-        _init(device) {
-            super._init();
-
-            this.device = device;
-            this.model = device.model;
-            this.kind = device.kind;
-            this.nativePath = device.native_path;
-            this.icon = null;
-            this.label = null;
-            this._proxy = null;
-
-            this._createProxy();
-        }
-
-        _createProxy() {
-            this._proxy = new PowerManagerProxy(
-                Gio.DBus.system,
-                "org.freedesktop.UPower",
-                this.device.get_object_path(),
-                (p, error) => {
-                    if (error) {
-                        log(`${Me.metadata.name} error: ${error.message}`);
-                        return;
-                    }
-
-                    this._proxy.connect(
-                        "g-properties-changed",
-                        this._update.bind(this)
-                    );
-
-                    this._update();
-                }
-            );
-        }
-
-        getBattery() {
-            try {
-                this.device.refresh_sync(null);
-            } catch (err) {
-                return -1;
-            }
-
-            return this.device.percentage;
-        }
-
-        _update() {
-            this.percentage = this.getBattery();
-
-            if (this.label !== null) {
-                this.label.text = `${this.percentage}%`;
-            }
-
-            if (this.icon !== null) {
-                this.icon.updatePercentage(this.percentage);
-            }
-
-            this.emit("update");
-        }
-
-        createIcon() {
-            let iconName;
-
-            if (this.kind === UPower.DeviceKind.KEYBOARD) {
-                iconName = "input-keyboard";
-            } else if (this.kind === UPower.DeviceKind.MOUSE) {
-                iconName = "input-mouse";
-            } else if (this.kind === UPower.DeviceKind.GAMING_INPUT) {
-                iconName = "input-gaming";
-            }
-
-            this.icon = new DeviceIconHID(iconName);
-
-            this._update();
-
-            return this.icon;
-        }
-
-        createLabel() {
-            this.label = new St.Label({
-                text: _("%"),
-                y_align: Clutter.ActorAlign.CENTER,
-                x_align: Clutter.ActorAlign.END,
-            });
-
-            this.label.set_x_expand(false);
-
-            this._update();
-
-            return this.label;
-        }
-
-        destroy() {
-            this.emit("destroy");
-        }
-    }
-);
+const PowerManagerProxy = Me.imports.powermanagerproxy;
+const HID = Me.imports.hid;
 
 /**
  * WirelessHID class. Provides widget.
@@ -227,7 +73,7 @@ const WirelessHID = GObject.registerClass(
 
             this.add_child(this._panelBox);
 
-            let uPowerProxy = new PowerManagerProxy(
+            let uPowerProxy = new PowerManagerProxy.PowerManagerProxy(
                 Gio.DBus.system,
                 "org.freedesktop.UPower",
                 "/org/freedesktop/UPower",
@@ -264,7 +110,7 @@ const WirelessHID = GObject.registerClass(
         }
 
         newDevice(device) {
-            this._devices[device.native_path] = new HID(device);
+            this._devices[device.native_path] = new HID.HID(device);
 
             let icon = this._devices[device.native_path].createIcon();
             this._panelBox.add(icon);

@@ -2,7 +2,7 @@
 
 ![screenshot](https://github.com/vchlum/wireless-hid/blob/main/screenshot.png)
 
-This extension is forked from https://github.com/vchlum/wireless-hid. I restructured project a bit and changed some metadata so that I can make my version that will match my needs more but I left `"original-author": "chlumskyvaclav@gmail.com",` in metadata to credit the author since I will make small changes, nothing major.
+This extension is forked from https://github.com/vchlum/wireless-hid. I restructured project a bit and changed some metadata so that I can make my version that will match my needs more but I left `"original-author": "chlumskyvaclav@gmail.com",` in metadata to credit the author since I will make small changes, nothing major. Actually I dont think it can be still considered a fork because I changed project structure so much that fetching an upstream would be a nightmare. My refactoring deviation got definitly too far in this case xD.
 
 ## Gnome Shell extension
 
@@ -23,5 +23,5 @@ At this point you need to reload gnome shell in order to be able to enable this 
 
 # To do
 
--   [ ] make extension displaing % in tray
+-   [x] make extension displaing % in tray
 -   [ ] add possibility to enable and disable displaing devices in tray
