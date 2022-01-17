@@ -114,11 +114,11 @@ const HID = GObject.registerClass(
             let iconName;
 
             if (this.kind === UPower.DeviceKind.KEYBOARD) {
-                iconName = "input-keyboard";
+                iconName = "input-keyboard-symbolic";
             } else if (this.kind === UPower.DeviceKind.MOUSE) {
-                iconName = "input-mouse";
+                iconName = "input-mouse-symbolic";
             } else if (this.kind === UPower.DeviceKind.GAMING_INPUT) {
-                iconName = "input-gaming";
+                iconName = "input-gaming-symbolic";
             }
 
             this.icon = new DeviceIconHID.DeviceIconHID(iconName);
