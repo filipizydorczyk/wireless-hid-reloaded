@@ -52,7 +52,7 @@ const HID = Me.imports.hid;
  * @constructor
  * @return {Object} menu widget instance
  */
-const WirelessHID = GObject.registerClass(
+var WirelessHID = GObject.registerClass(
     {
         GTypeName: "WirelessHIDReloaded",
     },

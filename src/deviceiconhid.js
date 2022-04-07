@@ -37,7 +37,7 @@ const GObject = imports.gi.GObject;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
 
-const DeviceIconHID = GObject.registerClass(
+var DeviceIconHID = GObject.registerClass(
     {
         GTypeName: "DeviceIconHID",
     },

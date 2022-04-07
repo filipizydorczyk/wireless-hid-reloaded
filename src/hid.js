@@ -43,7 +43,7 @@ const DeviceIconHID = Me.imports.deviceiconhid;
 const Clutter = imports.gi.Clutter;
 const PowerManagerProxy = Me.imports.powermanagerproxy;
 
-const HID = GObject.registerClass(
+var HID = GObject.registerClass(
     {
         Signals: {
             update: {},

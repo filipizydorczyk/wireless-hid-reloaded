@@ -36,9 +36,5 @@
 const Gio = imports.gi.Gio;
 
 const { loadInterfaceXML } = imports.misc.fileUtils;
-const DisplayDeviceInterface = loadInterfaceXML(
-    "org.freedesktop.UPower.Device"
-);
-const PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(
-    DisplayDeviceInterface
-);
+var DisplayDeviceInterface = loadInterfaceXML("org.freedesktop.UPower.Device");
+var PowerManagerProxy = Gio.DBusProxy.makeProxyWrapper(DisplayDeviceInterface);
