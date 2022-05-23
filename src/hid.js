@@ -87,12 +87,6 @@ var HID = GObject.registerClass(
         }
 
         getBattery() {
-            try {
-                this.device.refresh_sync(null);
-            } catch (err) {
-                return -1;
-            }
-
             return this.device.percentage;
         }
 
